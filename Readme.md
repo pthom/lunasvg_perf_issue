@@ -3,7 +3,7 @@
 ### Intro
 This repository will build a simple ImGui application that uses LunaSvg to load a font.
 
-With LunaSvg, we can load "noto-untouchedsvg.ttf" with very good performance.
+With LunaSvg, we can load "noto-untouchedsvg.ttf", and "TwitterColorEmoji-SVGinOT.ttf" with very good performance.
 
 However, with "NotoColorEmoji-Regular.ttf", the performance takes a hit: it takes about 3 seconds per glyph.
 
@@ -62,7 +62,7 @@ make
 At this step, it should display run fast, and display glyphs from "noto-untouchedsvg.ttf";
 ![img.png](images/shot.png)
 
-Now, uncomment this in [demo_perf_issue_load_font.cpp](demo_perf_issue_load_font.cpp), line 70:
+Now, uncomment this in [demo_perf_issue_load_font.cpp](demo_perf_issue_load_font.cpp), line 76:
 
 ```cpp
     {

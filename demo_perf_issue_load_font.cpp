@@ -67,6 +67,12 @@ void DemoPerfIssueLoadFont()
         std::string fontFile = ThisDir() + "/fonts/noto-untouchedsvg.ttf";
         gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
     }
+    {
+        // will load 1408 colored glyphs, with lunasvg. Fast!
+        std::string fontFile = ThisDir() + "/fonts/TwitterColorEmoji-SVGinOT.ttf";
+        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+    }
+
 //    {
 //        // will load 1428 glyphs, with lunasvg. Slow. About 2 seconds per glyph
 //        std::string fontFile = ThisDir() + "/fonts/NotoColorEmoji-Regular.ttf";
@@ -83,6 +89,7 @@ void ShowEmojiGlyphs()
     ImGui::PushFont(gEmojiFont);
     ImGui::Text(u8"\U0001F334");//🌴
     ImGui::Text(u8"\U0000270C\U0000FE0F");//✌️
+    ImGui::Text(u8"\U00002764\U0000FE0F");//❤️
     ImGui::PopFont();
 
     ImGui::End();
