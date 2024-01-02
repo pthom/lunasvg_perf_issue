@@ -44,7 +44,7 @@ std::string ThisDir()
     return thisFile.substr(0, lastSlash) + "/";
 }
 
-ImFont *gEmojifont = nullptr;
+ImFont *gEmojiFont = nullptr;
 void DemoPerfIssueLoadFont()
 {
     static ImWchar ranges[] = { 0x1, 0x1FFFF, 0 };
@@ -57,29 +57,30 @@ void DemoPerfIssueLoadFont()
     ImGui::GetIO().Fonts->AddFontFromFileTTF(fontDefault.c_str(), 16.0f, &cfg, ranges);
 
     // Load emoji fonts
-//    {
-//        // will not use lunasvg. Fast
-//        std::string fontFile = ThisDir() + "/fonts/NotoEmoji-Regular.ttf";
-//        gEmojifont = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-//    }
+    {
+        // will not use lunasvg. Fast
+        std::string fontFile = ThisDir() + "/fonts/NotoEmoji-Regular.ttf";
+        gEmojiFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+    }
     {
         // will load 1408 colored glyphs, with lunasvg. Fast!
         std::string fontFile = ThisDir() + "/fonts/noto-untouchedsvg.ttf";
-        gEmojifont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
     }
 //    {
-//        // will load 1428 glyphs, with lunasvg. Slow, very slow. About 2 seconds per glyph
+//        // will load 1428 glyphs, with lunasvg. Slow. About 2 seconds per glyph
 //        std::string fontFile = ThisDir() + "/fonts/NotoColorEmoji-Regular.ttf";
-//        gEmojifont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+//        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
 //    }
 }
 
 void ShowEmojiGlyphs()
 {
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::Begin("Emojis");
-    ImGui::Text("Emoji glyphs: %d", gEmojifont->Glyphs.Size);
+    ImGui::Text("Emoji glyphs: %d", gEmojiFont->Glyphs.Size);
 
-    ImGui::PushFont(gEmojifont);
+    ImGui::PushFont(gEmojiFont);
     ImGui::Text(u8"\U0001F334");//🌴
     ImGui::Text(u8"\U0000270C\U0000FE0F");//✌️
     ImGui::PopFont();

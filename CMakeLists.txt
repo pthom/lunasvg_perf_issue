@@ -2,6 +2,7 @@ project(lunasvg_perf_issue)
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
 
+
 # Add lunasvg
 add_subdirectory(external/lunasvg)
 # Add glfw
