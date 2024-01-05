@@ -41,3 +41,6 @@ target_link_libraries(imgui PUBLIC OpenGL::GL)
 # Add our perf issue test
 add_executable(demo_perf_issue_load_font demo_perf_issue_load_font.cpp)
 target_link_libraries(demo_perf_issue_load_font PUBLIC imgui)
+
+add_executable(ft_issue ft_issue.cpp)
+target_link_libraries(ft_issue PUBLIC freetype)
