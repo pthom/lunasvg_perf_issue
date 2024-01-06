@@ -91,7 +91,9 @@ struct FreetypeFont
         req.height = (uint32_t)(pixel_height * 64 * RasterizationDensity);
         req.horiResolution = 0;
         req.vertResolution = 0;
-        FT_Request_Size(Face, &req);
+        FT_Error error;
+        error = FT_Request_Size(Face, &req);
+        ASSERT(error == 0);
 
         // Update font info
         FT_Size_Metrics metrics = Face->size->metrics;
@@ -107,7 +109,9 @@ struct FreetypeFont
     {
         if (Face)
         {
-            FT_Done_Face(Face);
+            FT_Error error;
+            error = FT_Done_Face(Face);
+            ASSERT(error == 0);
             Face = nullptr;
         }
     }
@@ -209,7 +213,8 @@ int main()
 
     // Install svg hooks for FreeType
     SVG_RendererHooks hooks = {Hook_InitSvg, Hook_FreeSvg, Hook_RenderSvg, Hook_PresetSlot };
-    FT_Property_Set(ft_library, "ot-svg", "svg-hooks", &hooks);
+    error = FT_Property_Set(ft_library, "ot-svg", "svg-hooks", &hooks);
+    ASSERT(error == 0);
 
     std::string fontPath = ThisDir() + "fonts/NotoColorEmoji-Regular.ttf";
     FreetypeFont freetypeFont;
@@ -217,6 +222,7 @@ int main()
     freetypeFont.LoadGlyphs(0x1, 0x1FFFF);
     freetypeFont.CloseFont();
 
-    FT_Done_FreeType(ft_library);
+    error = FT_Done_FreeType(ft_library);
+    ASSERT(error == 0);
     return 0;
 }
