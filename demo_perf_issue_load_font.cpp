@@ -57,27 +57,31 @@ void DemoPerfIssueLoadFont()
     ImGui::GetIO().Fonts->AddFontFromFileTTF(fontDefault.c_str(), 16.0f, &cfg, ranges);
 
     // Load emoji fonts
-    {
-        // will not use lunasvg. Fast
-        std::string fontFile = ThisDir() + "/fonts/NotoEmoji-Regular.ttf";
-        gEmojiFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-    }
-    {
-        // will load 1408 colored glyphs, with lunasvg. Fast!
-        std::string fontFile = ThisDir() + "/fonts/noto-untouchedsvg.ttf";
-        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-    }
-    {
-        // will load 1408 colored glyphs, with lunasvg. Fast!
-        std::string fontFile = ThisDir() + "/fonts/TwitterColorEmoji-SVGinOT.ttf";
-        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-    }
+//    {
+//        // will not use lunasvg. Fast
+//        std::string fontFile = ThisDir() + "/fonts/NotoEmoji-Regular.ttf";
+//        gEmojiFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+//    }
+//    {
+//        // will load 1408 colored glyphs, with lunasvg. Fast!
+//        std::string fontFile = ThisDir() + "/fonts/noto-untouchedsvg.ttf";
+//        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+//    }
+//    {
+//        // will load 1408 colored glyphs, with lunasvg. Fast!
+//        std::string fontFile = ThisDir() + "/fonts/TwitterColorEmoji-SVGinOT.ttf";
+//        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+//    }
 
+    auto now = std::chrono::high_resolution_clock::now();
     {
         // will load 1428 glyphs, with lunasvg. Slow. About 2 seconds per glyph
         std::string fontFile = ThisDir() + "/fonts/NotoColorEmoji-Regular.ttf";
-        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 60.0f, &cfg, ranges);
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - now;
+    printf("Loading font took %f seconds\n", elapsed.count());
 }
 
 void ShowEmojiGlyphs()
@@ -90,6 +94,7 @@ void ShowEmojiGlyphs()
     ImGui::Text(u8"\U0001F334");//🌴
     ImGui::Text(u8"\U0000270C\U0000FE0F");//✌️
     ImGui::Text(u8"\U00002764\U0000FE0F");//❤️
+    ImGui::Text(u8"\U0001F3C3"); //  🏃
     ImGui::PopFont();
 
     ImGui::End();
