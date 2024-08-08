@@ -73,11 +73,11 @@ void DemoPerfIssueLoadFont()
         gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
     }
 
-//    {
-//        // will load 1428 glyphs, with lunasvg. Slow. About 2 seconds per glyph
-//        std::string fontFile = ThisDir() + "/fonts/NotoColorEmoji-Regular.ttf";
-//        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-//    }
+    {
+        // will load 1428 glyphs, with lunasvg. Slow. About 2 seconds per glyph
+        std::string fontFile = ThisDir() + "/fonts/NotoColorEmoji-Regular.ttf";
+        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
+    }
 }
 
 void ShowEmojiGlyphs()

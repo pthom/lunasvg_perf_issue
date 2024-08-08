@@ -1,6 +1,6 @@
 [submodule "external/imgui"]
 	path = external/imgui
-	url = https://github.com/ocornut/imgui.git
+	url = https://github.com/pthom/imgui.git
 [submodule "external/lunasvg"]
 	path = external/lunasvg
 	url = https://github.com/sammycage/lunasvg.git
@@ -10,3 +10,9 @@
 [submodule "external/glfw"]
 	path = external/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "external/plutosvg"]
+	path = external/plutosvg
+	url = https://github.com/sammycage/plutosvg.git
+[submodule "external/plutovg"]
+	path = external/plutovg
+	url = https://github.com/sammycage/plutovg.git
