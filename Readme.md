@@ -1,84 +1,43 @@
-# Repro of a performance issue with Lunasvg when used inside ImGui as a font loader utility
+# Demonstrate usage of plutosvg / plutovg with ImGui
 
 ### Intro
-This repository will build a simple ImGui application that uses LunaSvg to load a font.
 
-With LunaSvg, we can load "noto-untouchedsvg.ttf", and "TwitterColorEmoji-SVGinOT.ttf" with very good performance.
+By default ImGui + LunaSvg will not be able to render emojis from NotoColorEmoji-Regular.ttf.
 
-However, with "NotoColorEmoji-Regular.ttf", the performance takes a hit: it takes about 3 seconds per glyph.
+This repository will build a simple ImGui application that will display emojis from NotoColorEmoji-Regular.ttf, using plutosvg + plutovg,
+as an alternative to lunasvg.
 
-### Code details
-[demo_perf_issue_load_font.cpp](demo_perf_issue_load_font.cpp) is an adapted copy of external/imgui/examples/example_glfw_opengl3/main.cpp
+<SVG Fonts include a set of SVG documents. As per the [OpenType specification](https://learn.microsoft.com/en-us/typography/opentype/spec/svg#glyph-identifiers),
+some SVG fonts (such as NotoColorEmoji) may group several glyphs in a common svg document (by selecting a subset of the elements in this document).
 
-The fonts are loaded here: note that the fonts are not loaded by the call to AddFontFromFileTTF, but by a later call to `ImFontAtlasBuildWithFreeType()`, 
-and this is where the performance issue is.
+LunaSvg does support fonts where each glyph is associated to a distinct document. Unfortunately, it is not able to render
+a subset of a svg document, and will likely not be able to do so in the future.
 
-```cpp
+Its cousin project plutosvg (by the same author), is able to do it, and provides ready to use freetype hooks.
 
-void DemoPerfIssueLoadFont()
-{
-    static ImWchar ranges[] = { 0x1, 0x1FFFF, 0 };
-    static ImFontConfig cfg;
-    cfg.OversampleH = cfg.OversampleV = 1;
-    cfg.FontBuilderFlags |= ImGuiFreeTypeBuilderFlags_LoadColor;
+Example: sammycage/lunasvg#150 shows an example where a single svg document
+included in the font may contains thousands of glyphs (each glyph is a subset of the svg document).
 
-    // Load a default font for ImGui: this does not use lunasvg, and it is fast
-    std::string fontDefault = ThisDir() + "/fonts/DroidSans.ttf";
-    ImGui::GetIO().Fonts->AddFontFromFileTTF(fontDefault.c_str(), 16.0f, &cfg, ranges);
 
-    // Load emoji fonts
-    {
-        // will not use lunasvg. Fast
-        std::string fontFile = ThisDir() + "/fonts/NotoEmoji-Regular.ttf";
-        gEmojiFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-    }
-    {
-        // will load 1408 colored glyphs, with lunasvg. Fast!
-        std::string fontFile = ThisDir() + "/fonts/noto-untouchedsvg.ttf";
-        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-    }
-    {
-        // will load 1428 glyphs, with lunasvg. Slow. About 2 seconds per glyph
-        std::string fontFile = ThisDir() + "/fonts/NotoColorEmoji-Regular.ttf";
-        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-    }
-}
+### Usage with plutovg / plutosvg
 
 ```
-
-### Build instructions
-
-```bash
-git clone git@github.com:pthom/lunasvg_perf_issue.git
-cd lunasvg_perf_issue
 git submodule update --init
-mkdir build
-cd build
-cmake ..
-make
-./demo_perf_issue_load_font
+mkdir build && cd build 
+cmake .. 
+cmake --build .
+./demo
 ```
 
-At this step, it should display run fast, and display glyphs from "noto-untouchedsvg.ttf";
-![img.png](images/shot.png)
+### Usage with LunaSvg
 
-Now, uncomment this in [demo_perf_issue_load_font.cpp](demo_perf_issue_load_font.cpp), line 76:
-
-```cpp
-    {
-        // will load 1428 glyphs, with lunasvg. Slow, very slow. About 2 seconds per glyph!
-        std::string fontFile = ThisDir() + "/fonts/NotoColorEmoji-Regular.ttf";
-        gEmojiFont  = ImGui::GetIO().Fonts->AddFontFromFileTTF(fontFile.c_str(), 30.0f, &cfg, ranges);
-    }
+```
+cmake .. -DUSE_PLUTO_INSTEAD_OF_LUNA_SVG=OFF
+cmake --build .
 ```
 
-And the performance drop will be visible.
+If building with LunaSvg, two issues will be visible:
 
-
-### Analysis of the performance issue:
-
-A quick analysis with a profiler shows that time seems to be spent in std::map::find + std::vector::emplace_back 
-
-![prof1](images/profile1.png)
-
-![prof2](images/profile2.png)
+- The initial loading of the font will be extremely slow (up to 30 minutes), since for each glyph 
+a huge SVG document that actually include thousands of glyphs will be rendered, instead of a subset of the document.
+- The rendering will be incorrect (where many glyphs will show a superposition of several emojis)

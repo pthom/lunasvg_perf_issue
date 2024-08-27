@@ -2,7 +2,7 @@ project(lunasvg_perf_issue)
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
 
-set(USE_PLUTO_INSTEAD_OF_LUNA_SVG ON)
+option(USE_PLUTO_INSTEAD_OF_LUNA_SVG "Use plutosvg" ON)  # Set this to off to compare with lunasvg
 
 # Add glfw
 add_subdirectory(external/glfw)
@@ -29,7 +29,7 @@ else()
 endif()
 
 # Add imgui
-# - with support for freetype + lunasvg
+# - with support for freetype
 # - with backend glfw + opengl3
 set(imgui_dir external/imgui)
 add_library(imgui STATIC
@@ -61,9 +61,6 @@ else()
     target_link_libraries(imgui PUBLIC lunasvg)
 endif()
 
-# Add our perf issue test
-add_executable(demo_perf_issue_load_font demo_perf_issue_load_font.cpp)
-target_link_libraries(demo_perf_issue_load_font PUBLIC imgui)
-
-add_executable(ft_issue ft_issue.cpp)
-target_link_libraries(ft_issue PUBLIC freetype)
+# Add our demo
+add_executable(demo demo.cpp)
+target_link_libraries(demo PUBLIC imgui)
