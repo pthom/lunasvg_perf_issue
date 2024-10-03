@@ -2,7 +2,8 @@ project(lunasvg_perf_issue)
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
 
-option(USE_PLUTO_INSTEAD_OF_LUNA_SVG "Use plutosvg" ON)  # Set this to off to compare with lunasvg
+#option(USE_PLUTO_INSTEAD_OF_LUNA_SVG "Use plutosvg" ON)  # Set this to off to compare with lunasvg
+set(USE_PLUTO_INSTEAD_OF_LUNA_SVG OFF CACHE BOOL "Use plutosvg")
 
 # Add glfw
 add_subdirectory(external/glfw)
